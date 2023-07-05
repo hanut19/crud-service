@@ -23,6 +23,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+func Index(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("HOME PUBLIC INDEX PAGE"))
+}
+
 func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("CreateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
