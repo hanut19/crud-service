@@ -22,7 +22,8 @@ func CreateRouter() {
 //initialize all routes
 func InitializeRoute() {
 	router.HandleFunc("/product", routeHandler.CreateProductHandler).Methods("POST")
-	router.HandleFunc("/products", routeHandler.IsAuthorized(routeHandler.GetProductsHandler)).Methods("GET")
+	//router.HandleFunc("/products", routeHandler.IsAuthorized(routeHandler.GetProductsHandler)).Methods("GET")
+	router.HandleFunc("/products", routeHandler.GetProductsHandler).Methods("GET")
 	router.HandleFunc("/product/{id}", routeHandler.GetProductHandler).Methods("GET")
 	router.HandleFunc("/download/{id}", routeHandler.DownloadHandler).Methods("GET")
 	router.HandleFunc("/product/{id}", routeHandler.DeleteProductHandler).Methods("DELETE")
