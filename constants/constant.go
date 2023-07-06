@@ -22,8 +22,8 @@ func GetPermission(role string) map[string]bool {
 	var retmap map[string]bool
 	permission := make(map[string]map[string]bool)
 
-	admin_map := map[string]bool{CREATE: true, READ: false, EDIT: true, DELETE: true}
-	user_map := map[string]bool{CREATE: false, READ: false, EDIT: false, DELETE: false}
+	admin_map := map[string]bool{CREATE: true, READ: true, EDIT: true, DELETE: true}
+	user_map := map[string]bool{CREATE: false, READ: true, EDIT: false, DELETE: false}
 
 	permission[ADMIN] = admin_map
 	permission[USER] = user_map
