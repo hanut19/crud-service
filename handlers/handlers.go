@@ -28,7 +28,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
-	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("CreateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
 		logger.Log.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
@@ -42,7 +42,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(res)
 		return
-	}*/
+	}
 	logger.Log.Printf("Create Product Request start")
 	var reqProdParms common.Product
 	rand := strconv.FormatInt(time.Now().Unix(), 10)
@@ -154,7 +154,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 
-	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("GetProducts: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
 		logger.Log.Printf(msg)
 		// w.Write([]byte("Not authorized."))
@@ -167,7 +167,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(res)
 		return
-	}*/
+	}
 	var rProductArray []common.Product
 
 	dbConn := database.Connection()
@@ -231,7 +231,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetProductHandler(w http.ResponseWriter, r *http.Request) {
-	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("GetProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
 		logger.Log.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
@@ -245,7 +245,7 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(res)
 		return
-	}*/
+	}
 
 	var rProduct common.Product
 	productID := mux.Vars(r)["id"]
@@ -342,7 +342,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 
 func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 
-	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("UpdateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
 		logger.Log.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
@@ -356,7 +356,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(res)
 		return
-	}*/
+	}
 
 	productID := mux.Vars(r)["id"]
 
@@ -486,7 +486,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
-	/*if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("DeleteProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
 		logger.Log.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
@@ -500,7 +500,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(res)
 		return
-	}*/
+	}
 
 	productID := mux.Vars(r)["id"]
 
