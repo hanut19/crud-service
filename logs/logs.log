@@ -1,1 +1,5 @@
-2023/07/06 11:51:30 logger.go:24: LogFile : logs/logs.log
+2023/07/06 12:13:50 logger.go:24: LogFile : logs/logs.log
+2023/07/06 12:14:28 database.go:36: Connected to MongoDB!
+2023/07/06 12:14:30 database.go:36: Connected to MongoDB!
+2023/07/06 12:14:31 handlers.go:486: UpdateProduct: update request sucessfull
+2023/07/06 12:14:31 database.go:52: Connection to MongoDB closed.

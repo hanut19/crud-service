@@ -469,12 +469,18 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 		return
 	}
+	var prod common.RespProduct
+	prod.ProductId = rProduct.ProductId
+	prod.Name = rProduct.Name
+	prod.Price = rProduct.Price
+	prod.Description = rProduct.Description
+	prod.File = common.GetHost(r) + "/download/" + rProduct.ProductId
 
 	res := common.APIResponse{
 		StatusCode: 200,
 		Message:    "Request updated sucessfully!!",
 		IsError:    false,
-		Result:     rProduct,
+		Result:     prod,
 	}
 	msg := fmt.Sprintf("UpdateProduct: update request sucessfull")
 	logger.Log.Printf(msg)
