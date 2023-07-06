@@ -571,7 +571,6 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 	res := common.APIResponse{
 		StatusCode: 200,
 		Message:    "Product Deleted successfully",
-		Result:     rProduct,
 		IsError:    false,
 	}
 	msg := fmt.Sprintf("DeleteProduct: Product delete sucessfully")
