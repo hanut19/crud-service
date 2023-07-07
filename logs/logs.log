@@ -1,1 +1,28 @@
 2023/07/06 12:46:48 logger.go:24: LogFile : logs/logs.log
+ERROR: 2023/07/07 11:18:53 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:18:56 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:19:02 handlers.go:226: GetProducts: Get all products sucessfully
+ERROR: 2023/07/07 11:19:02 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 11:20:17 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:20:20 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:20:20 handlers.go:304: GetProductByID: Get product sucessfully
+ERROR: 2023/07/07 11:20:20 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 11:20:37 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:20:40 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:20:41 handlers.go:277: GetProductById: Error: mongo: no documents in result
+ERROR: 2023/07/07 11:20:41 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 11:21:51 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:21:52 handlers.go:47: Create Product Request start
+ERROR: 2023/07/07 11:21:54 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:21:54 handlers.go:149: CreateProduct: Product saved sucessfully: &{ObjectID("64a7a7fa055850f550521883")}
+ERROR: 2023/07/07 11:21:55 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 11:22:11 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:22:14 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:22:21 handlers.go:226: GetProducts: Get all products sucessfully
+ERROR: 2023/07/07 11:22:21 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 11:24:27 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:24:27 handlers.go:604: Auth: Your Token is not vaild
+ERROR: 2023/07/07 11:24:49 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 11:24:52 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 11:24:52 handlers.go:487: UpdateProduct: update request sucessfull
+ERROR: 2023/07/07 11:24:53 database.go:52: Connection to MongoDB closed.

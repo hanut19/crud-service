@@ -22,18 +22,18 @@ func Connection() *mongo.Client {
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		msg := fmt.Sprintf("Error while connect to DB %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 	}
 
 	// Check the connection
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		msg := fmt.Sprintf("Error while connect to DB %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 	}
 
 	fmt.Println("Connected to MongoDB!")
-	logger.Log.Printf("Connected to MongoDB!")
+	logger.ErrorLogger.Printf("Connected to MongoDB!")
 	return client
 }
 func CloseClientDB(client *mongo.Client) {
@@ -44,10 +44,10 @@ func CloseClientDB(client *mongo.Client) {
 	err := client.Disconnect(context.TODO())
 	if err != nil {
 		msg := fmt.Sprintf("Error while connect to DB %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 	}
 
 	// TODO optional you can log your closed MongoDB client
 	fmt.Println("Connection to MongoDB closed.")
-	logger.Log.Printf("Connection to MongoDB closed.")
+	logger.ErrorLogger.Printf("Connection to MongoDB closed.")
 }

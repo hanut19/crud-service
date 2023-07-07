@@ -24,13 +24,14 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
+	logger.InfoLogger.Printf("Home Page is call")
 	w.Write([]byte("HOME PUBLIC INDEX PAGE"))
 }
 
 func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("CreateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
 		res := common.APIResponse{
@@ -43,7 +44,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 		return
 	}
-	logger.Log.Printf("Create Product Request start")
+	logger.InfoLogger.Printf("Create Product Request start")
 	var reqProdParms common.Product
 	rand := strconv.FormatInt(time.Now().Unix(), 10)
 	reqProdParms.ProductId = "p" + rand
@@ -55,7 +56,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	err := v.Struct(reqProdParms)
 	if err != nil {
 		msg := fmt.Sprintf("validation Error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		res := common.APIResponse{
 			StatusCode: 400,
@@ -72,7 +73,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	file, handlerFile, err := r.FormFile("uploadFile")
 	if err != nil {
 		msg := fmt.Sprintf("CreateProduct: File upload error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		res := common.APIResponse{
 			StatusCode: 400,
 			Message:    err.Error(),
@@ -89,7 +90,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 
 	if handlerFile.Size > 2000000 {
 		msg := fmt.Sprintf("CreateProduct: File upload error: Uploaded file not be allowed more than 2 mb")
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		res := common.APIResponse{
 			StatusCode: 400,
@@ -105,7 +106,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	fileBytes, err := ioutil.ReadAll(file)
 	if err != nil {
 		msg := fmt.Sprintf("CreateProduct: Read file error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		res := common.APIResponse{
 			StatusCode: 400,
@@ -127,7 +128,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 	result, err := usersession.InsertOne(context.TODO(), &reqProdParms)
 	if err != nil {
 		mesg := fmt.Sprintf("Inseration failed with error %s", err.Error())
-		logger.Log.Printf("CreateProduct: " + mesg)
+		logger.ErrorLogger.Printf("CreateProduct: " + mesg)
 		fmt.Println(mesg)
 		res := common.APIResponse{
 			StatusCode: 500,
@@ -145,7 +146,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 		Result:     result,
 	}
 	msg := fmt.Sprintf("CreateProduct: Product saved sucessfully: %s", result)
-	logger.Log.Printf(msg)
+	logger.InfoLogger.Printf(msg)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(res)
@@ -156,7 +157,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("GetProducts: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized."))
 		res := common.APIResponse{
 			StatusCode: 401,
@@ -168,6 +169,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 		return
 	}
+	logger.InfoLogger.Printf("Get ALL Product Request start")
 	var rProductArray []common.Product
 
 	dbConn := database.Connection()
@@ -177,7 +179,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 	result, err := usersession.Find(context.TODO(), bson.M{})
 	if err != nil {
 		mesg := fmt.Sprintf("GetProducts : Error : %s", err.Error())
-		logger.Log.Printf(mesg)
+		logger.ErrorLogger.Printf(mesg)
 		fmt.Println(mesg)
 		res := common.APIResponse{
 			StatusCode: 500,
@@ -192,7 +194,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 	if err = result.All(context.TODO(), &rProductArray); err != nil {
 		mesg := fmt.Sprintf("Error While getting products %s", err.Error())
 		msg := fmt.Sprintf("GetProducts: Error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		fmt.Println(mesg)
 		res := common.APIResponse{
@@ -222,7 +224,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 		Result:     respArray,
 	}
 	msg := fmt.Sprintf("GetProducts: Get all products sucessfully")
-	logger.Log.Printf(msg)
+	logger.InfoLogger.Printf(msg)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -233,7 +235,7 @@ func GetProductsHandler(w http.ResponseWriter, r *http.Request) {
 func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("GetProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
 		res := common.APIResponse{
@@ -246,12 +248,12 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 		return
 	}
-
+	logger.InfoLogger.Printf("Get Product by ID Request start")
 	var rProduct common.Product
 	productID := mux.Vars(r)["id"]
 	if productID == "" {
 		msg := fmt.Sprintf("GetProductByID: Error: productID cannot be blank")
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		mesg := fmt.Sprintf("productID is required")
 		//logger.Error(mesg)
@@ -273,7 +275,7 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 	err := usersession.FindOne(context.TODO(), bson.M{"productid": productID}).Decode(&rProduct)
 	if err != nil {
 		msg := fmt.Sprintf("GetProductById: Error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		mesg := fmt.Sprintf("Error While getting product %s", err.Error())
 		//logger.Error(mesg)
@@ -300,7 +302,7 @@ func GetProductHandler(w http.ResponseWriter, r *http.Request) {
 		Message:    "Get product Sucessfully!!",
 		Result:     prod,
 	}
-	logger.Log.Printf("GetProductByID: Get product sucessfully")
+	logger.InfoLogger.Printf("GetProductByID: Get product sucessfully")
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -314,7 +316,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(productID)
 
 	msg := fmt.Sprintf("DowloadFile: Request to Download file %s", productID)
-	logger.Log.Printf(msg)
+	logger.InfoLogger.Printf(msg)
 
 	dbConn := database.Connection()
 	usersession := dbConn.Database("productcatalog").Collection("products")
@@ -330,7 +332,7 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		_, err := io.Copy(w, strings.NewReader(string(rProduct.File)))
 		if err != nil {
 			msg := fmt.Sprintf("DowloadFile: unable to download file %s", err.Error())
-			logger.Log.Printf(msg)
+			logger.ErrorLogger.Printf(msg)
 			http.Error(w, "Remote server error", 503)
 			return
 		}
@@ -344,7 +346,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("UpdateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
 		res := common.APIResponse{
@@ -357,12 +359,12 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(res)
 		return
 	}
-
+	logger.InfoLogger.Printf("Update Product Request start")
 	productID := mux.Vars(r)["id"]
 
 	if productID == "" {
 		msg := fmt.Sprintf("UpdateProduct: productID cannot be empty")
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 	}
 
 	dbConn := database.Connection()
@@ -394,7 +396,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 			IsError:    true,
 		}
 		msg := fmt.Sprintf("UpdateProduct: Error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(res)
@@ -410,7 +412,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 				IsError:    true,
 			}
 			msg := fmt.Sprintf("UpdateProduct: Upload new file Error: %s", err.Error())
-			logger.Log.Printf(msg)
+			logger.ErrorLogger.Printf(msg)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(res)
@@ -427,7 +429,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 				IsError:    true,
 			}
 			msg := fmt.Sprintf("UpdateProduct: Error: Uploaded file not be allowed more than 2 mb")
-			logger.Log.Printf(msg)
+			logger.ErrorLogger.Printf(msg)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(res)
@@ -443,7 +445,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 				IsError:    true,
 			}
 			msg := fmt.Sprintf("UpdateProduct: ReadFile Error: %s", err.Error())
-			logger.Log.Printf(msg)
+			logger.ErrorLogger.Printf(msg)
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(res)
@@ -462,7 +464,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 			IsError:    true,
 		}
 		msg := fmt.Sprintf("UpdateProduct: Updating Error: %s", err.Error())
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -483,7 +485,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 		Result:     prod,
 	}
 	msg := fmt.Sprintf("UpdateProduct: update request sucessfull")
-	logger.Log.Printf(msg)
+	logger.InfoLogger.Printf(msg)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -494,7 +496,7 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
 		msg := fmt.Sprintf("DeleteProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
 		res := common.APIResponse{
@@ -512,7 +514,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 
 	if productID == "" {
 		msg := fmt.Sprintf("DeleteProduct: Product ID cannot be blank")
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 	}
 	fmt.Println(productID)
 	var rProduct common.Product
@@ -523,7 +525,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		mesg := fmt.Sprintf("Error While getting product detail %s", err.Error())
 		msg := fmt.Sprintf("DeleteProduct:" + mesg)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		fmt.Println(mesg)
 		res := common.APIResponse{
 			StatusCode: 500,
@@ -545,7 +547,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 			IsError:    true,
 		}
 		msg := fmt.Sprintf("DeleteProduct: " + mesg)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
@@ -562,7 +564,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 			IsError:    true,
 		}
 		msg := fmt.Sprintf("DeleteProduct: " + mesg)
-		logger.Log.Printf(msg)
+		logger.ErrorLogger.Printf(msg)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(res)
@@ -574,7 +576,7 @@ func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
 		IsError:    false,
 	}
 	msg := fmt.Sprintf("DeleteProduct: Product delete sucessfully")
-	logger.Log.Printf(msg)
+	logger.InfoLogger.Printf(msg)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(res)
@@ -588,6 +590,7 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 		splitToken := strings.Split(reqToken, "Bearer")
 		if len(splitToken) != 2 {
 			var err common.Error
+			logger.ErrorLogger.Printf("Auth: No Token Found")
 			err = helpers.SetError(err, "No Token Found")
 			json.NewEncoder(w).Encode(err)
 			return
@@ -599,6 +602,7 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 		_ = usersession.FindOne(context.TODO(), bson.M{"tokenstring": reqToken}).Decode(&respUsertoken)
 		if respUsertoken.TokenString == "" {
 			var err common.Error
+			logger.ErrorLogger.Printf("Auth: Your Token is not vaild")
 			err = helpers.SetError(err, "Your Token is not vaild.")
 			json.NewEncoder(w).Encode(err)
 			return
@@ -608,12 +612,14 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 
 		token, err := jwt.Parse(reqToken, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				logger.ErrorLogger.Printf("Auth: There was an error in parsing token.")
 				return nil, fmt.Errorf("There was an error in parsing token.")
 			}
 			return mySigningKey, nil
 		})
 		if err != nil {
 			var err common.Error
+			logger.ErrorLogger.Printf("Auth: Your Token has been expired")
 			err = helpers.SetError(err, "Your Token has been expired.")
 			json.NewEncoder(w).Encode(err)
 			return
@@ -631,6 +637,7 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 			}
 		}
 		var reserr common.Error
+		logger.ErrorLogger.Printf("Auth: Not Authorized")
 		reserr = helpers.SetError(reserr, "Not Authorized.")
 		json.NewEncoder(w).Encode(err)
 	}
