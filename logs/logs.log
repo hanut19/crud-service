@@ -26,3 +26,16 @@ ERROR: 2023/07/07 11:24:49 database.go:36: Connected to MongoDB!
 ERROR: 2023/07/07 11:24:52 database.go:36: Connected to MongoDB!
 INFO: 2023/07/07 11:24:52 handlers.go:487: UpdateProduct: update request sucessfull
 ERROR: 2023/07/07 11:24:53 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 12:24:22 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 12:24:23 handlers.go:47: Create Product Request start
+ERROR: 2023/07/07 12:24:25 database.go:36: Connected to MongoDB!
+INFO: 2023/07/07 12:24:25 handlers.go:149: CreateProduct: Product saved sucessfully: &{ObjectID("64a7b6a133b3d1be8a6306ed")}
+ERROR: 2023/07/07 12:24:25 database.go:52: Connection to MongoDB closed.
+ERROR: 2023/07/07 12:28:06 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 12:28:06 handlers.go:34: CreateProduct: Error: user is not authorized to read
+ERROR: 2023/07/07 12:29:46 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 12:29:47 handlers.go:605: Auth: Your Token is not vaild
+ERROR: 2023/07/07 12:29:59 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 12:29:59 handlers.go:349: UpdateProduct: Error: user is not authorized to read
+ERROR: 2023/07/07 12:30:53 database.go:36: Connected to MongoDB!
+ERROR: 2023/07/07 12:30:54 handlers.go:499: DeleteProduct: Error: user is not authorized to read

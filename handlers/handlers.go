@@ -29,8 +29,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
-	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
-		msg := fmt.Sprintf("CreateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
+	if !constants.IsAccess(r.Header.Get("Role"), constants.CREATE) {
+		msg := fmt.Sprintf("CreateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.CREATE)
 		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
@@ -344,8 +344,8 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 
 func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 
-	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
-		msg := fmt.Sprintf("UpdateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
+	if !constants.IsAccess(r.Header.Get("Role"), constants.EDIT) {
+		msg := fmt.Sprintf("UpdateProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.EDIT)
 		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
@@ -494,8 +494,8 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProductHandler(w http.ResponseWriter, r *http.Request) {
-	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
-		msg := fmt.Sprintf("DeleteProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
+	if !constants.IsAccess(r.Header.Get("Role"), constants.DELETE) {
+		msg := fmt.Sprintf("DeleteProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.DELETE)
 		logger.ErrorLogger.Printf(msg)
 		// w.Write([]byte("Not authorized to Create Product"))
 		// return
