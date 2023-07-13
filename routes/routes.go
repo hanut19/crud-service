@@ -30,6 +30,7 @@ func InitializeRoute() {
 	router.HandleFunc("/product/{id}", routeHandler.IsAuthorized(routeHandler.DeleteProductHandler)).Methods("DELETE")
 
 	router.HandleFunc("/product/{id}", routeHandler.IsAuthorized(routeHandler.UpdateProductHandler)).Methods("PUT")
+	router.HandleFunc("/search/{search}", routeHandler.SearchHandler).Methods("GET")
 	router.Methods("OPTIONS").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		//w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "")

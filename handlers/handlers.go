@@ -328,7 +328,8 @@ func DownloadHandler(w http.ResponseWriter, r *http.Request) {
 		rand := strconv.FormatInt(time.Now().Unix(), 10)
 		fmt.Println("writing file")
 		newFileName := "download" + rand + "." + rProduct.FileType
-		w.Header().Set("Content-Disposition", "attachment; filename="+newFileName)
+		w.Header().Set("Content-Disposition", "filename="+newFileName)
+		//w.Header().Set("Content-Disposition", "attachment; filename="+newFileName)
 		_, err := io.Copy(w, strings.NewReader(string(rProduct.File)))
 		if err != nil {
 			msg := fmt.Sprintf("DowloadFile: unable to download file %s", err.Error())
@@ -641,4 +642,101 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 		reserr = helpers.SetError(reserr, "Not Authorized.")
 		json.NewEncoder(w).Encode(err)
 	}
+}
+
+func SearchHandler(w http.ResponseWriter, r *http.Request) {
+	if !constants.IsAccess(r.Header.Get("Role"), constants.READ) {
+		msg := fmt.Sprintf("GetProduct: Error: %s is not authorized to %s", r.Header.Get("Role"), constants.READ)
+		logger.ErrorLogger.Printf(msg)
+		res := common.APIResponse{
+			StatusCode: 401,
+			Message:    "Not authorized to Get Product",
+			IsError:    true,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(res)
+		return
+	}
+	logger.InfoLogger.Printf("Get Product search Request start")
+	search := mux.Vars(r)["search"]
+	if search == "" {
+		msg := fmt.Sprintf("Search: Error: productID cannot be blank")
+		logger.ErrorLogger.Printf(msg)
+
+		mesg := fmt.Sprintf("productID is required")
+		res := common.APIResponse{
+			StatusCode: 500,
+			Message:    mesg,
+			IsError:    true,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(res)
+		return
+	}
+	dbConn := database.Connection()
+	usersession := dbConn.Database("productcatalog").Collection("products")
+	defer database.CloseClientDB(dbConn)
+	searchFor := search
+	searchCond := []interface{}{bson.M{"name": bson.M{"$regex": searchFor, "$options": "i"}}, bson.M{"description": bson.M{"$regex": searchFor, "$options": "i"}}, bson.M{"price": bson.M{"$regex": searchFor, "$options": "i"}}}
+	result, err := usersession.Find(context.TODO(), bson.M{"$or": searchCond})
+	if err != nil {
+		msg := fmt.Sprintf("Search: Error: %s", err.Error())
+		logger.ErrorLogger.Printf(msg)
+
+		mesg := fmt.Sprintf("Error While getting product %s", err.Error())
+		fmt.Println(mesg)
+		res := common.APIResponse{
+			StatusCode: 500,
+			Message:    mesg,
+			IsError:    true,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(res)
+		return
+	}
+	var rProductArray1 []common.Product
+	if err = result.All(context.TODO(), &rProductArray1); err != nil {
+		mesg := fmt.Sprintf("Error While getting products %s", err.Error())
+		msg := fmt.Sprintf("GetProducts: Error: %s", err.Error())
+		logger.ErrorLogger.Printf(msg)
+
+		fmt.Println(mesg)
+		res := common.APIResponse{
+			StatusCode: 500,
+			Message:    mesg,
+			IsError:    true,
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(res)
+		return
+	}
+	var respArray []common.RespProduct
+	for _, rProd := range rProductArray1 {
+		var prod common.RespProduct
+		prod.ProductId = rProd.ProductId
+		prod.Name = rProd.Name
+		prod.Price = rProd.Price
+		prod.Description = rProd.Description
+		prod.File = common.GetHost(r) + "/download/" + rProd.ProductId
+		respArray = append(respArray, prod)
+	}
+	rmesg := "No product Found!!"
+	if len(respArray) > 0 {
+		rmesg = "product found Sucessfully!!"
+	}
+	res := common.APIResponse{
+		StatusCode: 200,
+		Message:    rmesg,
+		Result:     respArray,
+	}
+	logger.InfoLogger.Printf("Search: Get product sucessfully")
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(res)
+	return
 }
